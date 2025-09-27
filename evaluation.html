@@ -1,0 +1,297 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evalora - Evaluate Answer Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/sample3.css' %}">
+    <style>
+        .loading-spinner { border: 2px solid #f3f3f3; border-top: 2px solid #3498db; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        .animate-logo-glow { animation: logo-glow 2s ease-in-out infinite; }
+        @keyframes logo-glow { 0%, 100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); } 50% { text-shadow: 0 0 20px rgba(255, 255, 255, 1); } }
+        .animate-text-glow { animation: text-glow 2s ease-in-out infinite; }
+        @keyframes text-glow { 0%, 100% { text-shadow: 0 0 5px rgba(59, 130, 246, 0.5); } 50% { text-shadow: 0 0 15px rgba(59, 130, 246, 1); } }
+        .animate-form-load { animation: form-load 0.5s ease-out; }
+        @keyframes form-load { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .nav-link:hover { transform: scale(1.05); background-color: rgba(255, 255, 255, 0.1); }
+        .error-highlight { border-color: #ef4444 !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col transition-colors duration-500 bg-gray-100 dark:bg-gray-900">
+
+    <!-- Header -->
+    <header>
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <h1 class="text-3xl font-bold text-white">EVALORA</h1>
+            <nav class="flex items-center">
+                <div class="nav-links">
+                   <a href="{% url 'index' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Home</a>
+                   <a href="{% url 'upload_view' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Upload</a>
+                   
+                   <a href="{% url 'download' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Download</a>
+                   <a href="{% url 'logout_view' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Logout</a>
+                </div>
+                <button id="themeToggle" class="ml-4">
+                    <svg id="sunIcon" class="hidden w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button id="hamburger" class="ml-4 md:hidden">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center pt-20 pb-10">
+        <div class="w-full max-w-4xl p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl animate-form-load">
+            <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-200 mb-8 animate-text-glow">Evaluate Answer Sheet</h2>
+            <form id="evaluationForm" method="post" class="space-y-6">
+                {% csrf_token %}
+<!-- Select Answer Sheet -->
+<div class="flex items-center gap-4">
+    <select name="answer_sheet_id" id="answerSheetDropdown" class="flex-1 p-2 border rounded dark:bg-gray-700 dark:text-white" required>
+        <option value="">-- Select Answer Sheet --</option>
+        {% for sheet in answer_sheets %}
+            <option value="{{ sheet.id }}" data-file-url="{{ sheet.file.url }}">{{ sheet.rollno }} - {{ sheet.subject.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- View File -->
+    <a id="viewAnswerSheetBtn" href="#" target="_blank"
+       class="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 opacity-50 pointer-events-none">
+       View
+    </a>
+
+    <!-- OCR Convert -->
+    <button type="button" id="ocrBtn"
+            class="py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+        OCR Convert
+    </button>
+</div>
+
+
+            {% if error %}
+                <div class="text-red-500 text-sm text-center mb-4">{{ error }}</div>
+            {% endif %}
+
+                <!-- Q1–Q10 (4 marks each) -->
+                <div class="space-y-4" class="scrollable-table">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Q1–Q10 (4 marks each)</h3>
+                    {% for i in questions_4 %}
+                        <div class="flex items-center gap-4">
+                            <label class="w-20 text-gray-700 dark:text-gray-200">Q{{ i }}</label>
+                            <input type="number" name="mark_q4_{{ i }}" min="0" max="4"
+                                   class="w-20 p-2 border rounded dark:bg-gray-700 dark:text-white">
+                            <textarea name="comment_q4_{{ i }}" rows="4" columns="50"
+                                      class="flex-1 p-2 border rounded dark:bg-gray-700 dark:text-white"
+                                      placeholder="Enter comment..."></textarea>
+                        </div>
+                    {% endfor %}
+                </div>
+
+     <!-- Q11–Q22 (10 marks each, select 6) -->
+<div class="space-y-4 mt-6" class="scrollable-table">
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+        Q11–Q22 (10 marks each, select 6)
+    </h3>
+    {% for i in questions_10 %}
+        <div class="flex items-center gap-4">
+            <!-- Checkbox name changed to match Django view -->
+            <!-- Q11–Q22 -->
+<input type="checkbox" class="q10-checkbox" name="q10_select" value="{{ i }}">
+
+            <label class="w-20 text-gray-700 dark:text-gray-200">Q{{ i }}</label>
+            <input type="number" name="mark_q10_{{ i }}" min="0" max="10"
+                   class="w-20 p-2 border rounded dark:bg-gray-700 dark:text-white">
+            <textarea name="comment_q10_{{ i }}" rows="4" columns="50"
+                      class="flex-1 p-2 border rounded dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter comment..."></textarea>
+        </div>
+    {% endfor %}
+</div>
+
+
+                <!-- Preview -->
+                <div class="relative mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Preview</h3>
+                    <p id="preview-error" class="text-red-500 text-sm mb-2 hidden">Please select exactly 6 questions from Q11–Q22.</p>
+                    <p id="marks-error" class="text-red-500 text-sm mb-2 hidden">Invalid valuation: total marks exceeding 100.</p>
+                    <div class="overflow-x-auto">
+                        <table id="previewTable" class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
+                                    <th class="p-3 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Question</th>
+                                    <th class="p-3 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Mark</th>
+                                    <th class="p-3 text-left text-sm font-medium text-gray-700 dark:text-gray-200">Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewBody"></tbody>
+                            <tfoot>
+                                <tr class="bg-gray-200 dark:bg-gray-700">
+                                    <td class="p-3 text-gray-900 dark:text-gray-100 font-bold">Total Marks</td>
+                                    <td id="totalMarksCell" class="p-3 text-gray-900 dark:text-gray-100 font-bold">0</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitButton" class="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden">
+                    Submit Evaluation
+                </button>
+            </form>
+        </div>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('input[name="q10_select"]'); // ✅ updated
+    const previewTableBody = document.getElementById('previewBody');
+    const marksError = document.getElementById('marks-error');
+    const previewError = document.getElementById('preview-error');
+    const submitButton = document.getElementById('submitButton');
+
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+
+    const viewButton = document.getElementById('viewAnswerSheetBtn');
+    const answerSheetDropdown = document.getElementById('answerSheetDropdown');
+
+    // --- Theme Toggle ---
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        sunIcon.classList.toggle('hidden');
+        moonIcon.classList.toggle('hidden');
+    });
+
+    // --- Dynamic View Button ---
+    answerSheetDropdown.addEventListener('change', () => {
+        const selectedOption = answerSheetDropdown.selectedOptions[0];
+        const fileUrl = selectedOption.getAttribute('data-file-url');
+
+        if (fileUrl) {
+            viewButton.href = fileUrl;
+            viewButton.classList.remove('opacity-50', 'pointer-events-none'); // enable button
+        } else {
+            viewButton.href = '#';
+            viewButton.classList.add('opacity-50', 'pointer-events-none'); // disable button if nothing selected
+        }
+    });
+
+    // Disable View button by default
+    viewButton.classList.add('opacity-50', 'pointer-events-none');
+
+    // --- Preview Table Update ---
+    function updatePreview() {
+        previewTableBody.innerHTML = '';
+        let totalMarks = 0;
+        let selectedCount = 0;
+
+        // Q1–Q10 (always display)
+        for (let i = 1; i <= 10; i++) {
+            const markInput = document.querySelector(`input[name="mark_q4_${i}"]`);
+            const commentInput = document.querySelector(`textarea[name="comment_q4_${i}"]`);
+            if (!markInput || !commentInput) continue;
+            const mark = parseInt(markInput.value) || 0;
+            const comment = commentInput.value || 'No comment';
+            totalMarks += mark;
+
+            previewTableBody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>Q${i} (4 marks)</td>
+                    <td>${mark}</td>
+                    <td>${comment}</td>
+                </tr>
+            `);
+        }
+
+        // Q11–Q22 (max per pair: 11–12, 13–14, ..., 21–22)
+        const pairs = [[11,12],[13,14],[15,16],[17,18],[19,20],[21,22]];
+
+        pairs.forEach(pair => {
+            let pairMax = 0;
+            let maxQ = null;
+
+            pair.forEach(q => {
+                const checkbox = document.querySelector(`input[name="q10_select"][value="${q}"]`);
+                const markInput = document.querySelector(`input[name="mark_q10_${q}"]`);
+                const commentInput = document.querySelector(`textarea[name="comment_q10_${q}"]`);
+                if (!checkbox || !markInput || !commentInput) return;
+
+                markInput.disabled = !checkbox.checked;
+                commentInput.disabled = !checkbox.checked;
+
+                if (checkbox.checked) selectedCount++;
+
+                const mark = parseInt(markInput.value) || 0;
+                if (mark > pairMax) {
+                    pairMax = mark;
+                    maxQ = q;
+                }
+            });
+
+            pair.forEach(q => {
+                const checkbox = document.querySelector(`input[name="q10_select"][value="${q}"]`);
+                const markInput = document.querySelector(`input[name="mark_q10_${q}"]`);
+                const commentInput = document.querySelector(`textarea[name="comment_q10_${q}"]`);
+                if (!checkbox || !markInput || !commentInput) return;
+
+                const mark = parseInt(markInput.value) || 0;
+                const comment = commentInput.value || 'No comment';
+
+                previewTableBody.insertAdjacentHTML('beforeend', `
+                    <tr class="${q === maxQ ? 'bg-yellow-100 dark:bg-yellow-700' : ''}">
+                        <td>Q${q} (10 marks)</td>
+                        <td>${mark}</td>
+                        <td>${comment}</td>
+                    </tr>
+                `);
+            });
+
+            totalMarks += pairMax; // Add only max mark from the pair
+        });
+
+        document.getElementById('totalMarksCell').textContent = totalMarks;
+
+        // Soft validation for Q11–Q22
+        if (selectedCount !== 6) {
+            previewError.classList.remove('hidden');
+        } else {
+            previewError.classList.add('hidden');
+        }
+
+        // Total marks validation
+        marksError.classList.toggle('hidden', totalMarks > 100);
+        submitButton.disabled = totalMarks > 100;
+    }
+
+    // Event listeners
+    checkboxes.forEach(cb => cb.addEventListener('change', updatePreview));
+    document.querySelectorAll('input[type="number"], textarea').forEach(inp => inp.addEventListener('input', updatePreview));
+
+    // Initial preview update
+    updatePreview();
+});
+</script>
+</body>
+</html>

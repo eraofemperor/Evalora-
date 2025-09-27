@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evalora-Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/sample1.css' %}">
+    <style>
+        input, textarea, select, button {
+            position: relative;
+            z-index: 9999 !important;
+        }
+        .login-box {
+            background: linear-gradient(rgba(16, 7, 7, 0.253), rgba(12, 12, 12, 0.95)), 
+                        url('https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') 
+                        no-repeat center center/cover;
+            background-blend-mode: overlay;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .dark .login-box {
+            background: linear-gradient(rgba(26, 35, 51, 0.95), rgba(26, 35, 51, 0.95)), 
+                        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') 
+                        no-repeat center center/cover;
+            background-blend-mode: overlay;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="day-mode min-h-screen transition-colors duration-300">
+
+    <!-- Navbar -->
+   <navbar class="bg-gray-800 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">EVALORA</h1>
+        <div class="flex items-center space-x-4">
+             <div class="flex items-center space-x-4">
+                <button type="button" id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                    <svg id="sunIcon" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 01 8.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <button type="button" id="hamburger" class="md:hidden p-2 rounded-full text-gray-800 dark:text-gray-200">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </navbar>
+
+    <!-- Login Section -->
+    <div class="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg login-box mx-auto mt-12">
+        <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-200 mb-6">Login</h2>
+        <form id="loginForm" action="{% url 'login_view' %}" method="post" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter username"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 dark:bg-gray-700 dark:text-black dark:placeholder-gray-400 dark:border-gray-600"
+                    required>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                <input type="password" name="password" id="password"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 dark:bg-gray-700 dark:text-black dark:placeholder-gray-400 dark:border-gray-600"
+                    required>
+            </div>
+
+            <!-- Error Messages -->
+            {% if error %}
+                <div class="text-red-500 text-sm">{{ error }}</div>
+            {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="text-red-500 text-sm">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- JS validation error placeholder -->
+            <div id="loginError" class="hidden text-red-500 text-sm"></div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">Login</button>
+        </form>
+
+        <p class="text-blue-300 text-sm mt-4 text-center">
+            Don't have an account?
+            <a href="{% url 'register_view' %}" class="text-yellow-400 hover:text-yellow-300 underline ml-1">Register</a>
+        </p>
+         <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+            <a href="{% url 'reset_password' %}" class="text-blue-500 hover:underline dark:text-dark-blue-400 dark:hover:text-dark-blue-400">Forgot Password?</a>
+        </p>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const htmlElement = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        } else {
+            htmlElement.classList.remove('dark');
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        });
+
+        // Login Form Validation
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+            loginError.classList.add('hidden');
+            loginError.textContent = '';
+
+            if (username.length < 6) {
+                event.preventDefault();
+                loginError.textContent = 'Username must be at least 6 characters long.';
+                loginError.classList.remove('hidden');
+                return;
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                event.preventDefault();
+                loginError.textContent = 'Username can only contain letters, numbers, and underscores.';
+                loginError.classList.remove('hidden');
+                return;
+            }
+
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) ||
+                !/[0-9]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                event.preventDefault();
+                loginError.textContent = 'Password must be at least 8 characters, including uppercase, lowercase, number, and special character.';
+                loginError.classList.remove('hidden');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

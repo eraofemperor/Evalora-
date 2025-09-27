@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evalora - Upload Answer Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/sample2.css' %}">
+</head>
+<body class="min-h-screen flex flex-col transition-colors duration-500 bg-gray-100 dark:bg-gray-900">
+    <header class="w-full fixed top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center px-4 py-3">
+            <h1 class="text-3xl font-bold tracking-wide text-white animate-logo-glow">Evalora</h1>
+            <nav class="flex items-center gap-4">
+                <div class="nav-links flex gap-2">
+                    <a href="{% url 'index' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Home</a>
+                   <a href="{% url 'evaluate' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Evaluate</a>
+                    <a href="{% url 'logout_view' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Logout</a>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 relative overflow-hidden">
+                    <svg id="sunIcon" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 01 8.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <span id="themeSpinner" class="loading-spinner hidden"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center pt-20 pb-10">
+        <div class="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl animate-form-load">
+            <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-200 mb-8 animate-text-glow">Upload Answer Sheet</h2>
+           <form id="uploadForm" action="{% url 'upload_view' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+    <div class="relative">
+        <label for="rollno" class="block text-sm font-medium">Roll Number</label>
+        <input type="number" name="rollno" id="rollno"
+               class="w-full p-3 border rounded-lg"
+               required>
+    </div>
+
+    <div class="relative">
+        <label for="subject_name" class="block text-sm font-medium">Subject</label>
+        <input list="subject-list" name="subject_name" id="subject_name"
+               class="w-full p-3 border rounded-lg"
+               placeholder="Start typing a subject..."
+               required>
+        <datalist id="subject-list">
+            {% for subject in subjects %}
+                <option value="{{ subject.name }}">
+            {% endfor %}
+        </datalist>
+    </div>
+
+    <div class="relative">
+        <label for="answer_sheet" class="block text-sm font-medium">Answer Sheet</label>
+        <input type="file" name="answer_sheet" id="answer_sheet"
+               accept="image/*,application/pdf"
+               class="w-full p-3 border rounded-lg"
+               required>
+    </div>
+
+    <div id="uploadError" class="text-red-500 text-sm hidden mt-2"></div>
+
+    <button type="submit" id="submitButton"
+            class="w-full bg-green-500 text-white py-3 rounded-lg relative overflow-hidden">
+        Upload
+    </button>
+</form>
+
+<script>
+    // Theme Toggle Logic
+    const htmlElement = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+    const themeSpinner = document.getElementById('themeSpinner');
+
+    function setTheme(isDark) {
+        if (isDark) {
+            htmlElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        } else {
+            htmlElement.classList.remove('dark');
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
+    }
+
+    // Load saved theme
+    setTheme(localStorage.getItem('theme') === 'dark');
+
+    themeToggle.addEventListener('click', () => {
+        themeSpinner.classList.remove('hidden');
+        themeToggle.disabled = true;
+
+        const isDark = !htmlElement.classList.contains('dark');
+        setTheme(isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+        setTimeout(() => {
+            showToast(`Switched to ${isDark ? 'Dark' : 'Light'} Mode`, 'success');
+            themeSpinner.classList.add('hidden');
+            themeToggle.disabled = false;
+        }, 500);
+    });
+
+    // Toast Notification
+    function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type} show animate-toast-in`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('animate-toast-out');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Upload Form Validation
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        const rollno = document.getElementById('rollno').value.trim();
+        const subjectName = document.getElementById('subject_name').value.trim();
+        const answerSheet = document.getElementById('answer_sheet').files[0];
+        const uploadError = document.getElementById('uploadError');
+
+        let errors = [];
+
+        if (!rollno || rollno <= 0) {
+            errors.push('Please enter a valid roll number.');
+        }
+        if (!subjectName) {
+            errors.push('Please select or type a subject.');
+        }
+        if (!answerSheet) {
+            errors.push('Please upload an answer sheet.');
+        }
+
+        if (errors.length > 0) {
+            event.preventDefault();
+            uploadError.textContent = errors.join(" ");
+            uploadError.classList.remove('hidden');
+        } else {
+            uploadError.classList.add('hidden');
+        }
+    });
+
+    // File Input Feedback
+    document.getElementById('answer_sheet').addEventListener('change', function() {
+        const fileName = this.files[0]?.name || 'No file selected';
+        showToast(`Selected file: ${fileName}`, 'success');
+    });
+
+    // Ripple Effect
+    document.getElementById('submitButton').addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.className = 'ripple';
+        this.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+    });
+</script>
+
+</body>
+</html>

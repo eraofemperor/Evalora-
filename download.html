@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="(% static 'css/sample4.css' %)"
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 p-4 text-white text-center">
+        <h1 class="text-2xl font-bold">Results Dashboard</h1>
+    </header>
+
+    <main class="container mx-auto p-6">
+
+        <!-- Insights -->
+        <section class="grid md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Topper</h3>
+                {% if topper %}
+                    <p>{{ topper.answer_sheet.student.name }} ({{ topper.total_marks }})</p>
+                {% else %}
+                    <p>No data</p>
+                {% endif %}
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Least</h3>
+                {% if least %}
+                    <p>{{ least.answer_sheet.student.name }} ({{ least.total_marks }})</p>
+                {% else %}
+                    <p>No data</p>
+                {% endif %}
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Average</h3>
+                <p>{{ average_marks }}</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold">Pass %</h3>
+                <p>{{ pass_percentage }}%</p>
+            </div>
+        </section>
+
+        <!-- Chart -->
+        <section class="bg-white p-4 rounded shadow mb-8">
+            <h2 class="text-lg font-bold mb-4">Marks Distribution</h2>
+            <canvas id="marksChart"></canvas>
+        </section>
+
+        <!-- All Results Download -->
+        <section class="bg-white p-6 rounded shadow mb-8">
+            <h2 class="text-lg font-bold mb-4">Download All Results</h2>
+            <div class="flex space-x-4">
+                <a href="{% url 'download_all_results_pdf' %}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">PDF</a>
+                <a href="{% url 'download_all_results_excel' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Excel</a>
+                <a href="{% url 'download_all_results_word' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Word</a>
+            </div>
+        </section>
+
+        <!-- Subject-wise Results -->
+        <section class="bg-white p-6 rounded shadow mb-8">
+            <h2 class="text-lg font-bold mb-4">Download Subject-wise Results</h2>
+            <ul class="space-y-2">
+                {% for subject in subjects %}
+                    <li class="flex justify-between items-center border-b pb-2">
+                        <span>{{ subject.name }}</span>
+                        <div class="space-x-2">
+                            <a href="{% url 'download_subject_results_pdf' subject.id %}" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">PDF</a>
+                            <a href="{% url 'download_subject_results_excel' subject.id %}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Excel</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <p>No subjects available.</p>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Student Search -->
+        <section class="bg-white p-6 rounded shadow mb-8">
+            <h2 class="text-lg font-bold mb-4">Search Student Result</h2>
+            <form method="get" action="{% url 'search_student_result' %}" class="flex space-x-2">
+                <input type="text" name="rollno" placeholder="Enter Roll No" class="border rounded p-2 w-full">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Search</button>
+            </form>
+            {% if error %}
+                <p class="text-red-500 mt-2">{{ error }}</p>
+            {% endif %}
+            {% if student %}
+                <div class="mt-4 bg-gray-50 p-4 rounded">
+                    <h3 class="font-semibold">Result Found:</h3>
+                    <p>Name: {{ student.name }} ({{ student.student_id }})</p>
+                    <p>Subject: {{ subject.name }}</p>
+                    <p>Marks: {{ marks }}</p>
+                </div>
+            {% endif %}
+        </section>
+
+    </main>
+
+    <!-- ChartJS Script -->
+    <script>
+        const ctx = document.getElementById('marksChart').getContext('2d');
+        const marksChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Marks',
+                    data: {{ chart_data|safe }},
+                    backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+    </script>
+
+</body>
+</html>

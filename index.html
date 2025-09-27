@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" id="theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+
+    <title>About - Evalora</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+       <style>
+        input, textarea, select, button {
+            position: relative;
+            z-index: 9999 !important;
+        }
+    </style>
+</head>
+
+<body>
+  
+    <main>
+        <!-- Header -->
+        <header>
+            <div class="container mx-auto px-4 flex justify-between items-center py-4">
+                <h1 class="text-3xl font-bold text-white">EVALORA</h1>
+                <nav class="flex items-center">
+                    <div class="nav-links">
+
+                       
+                        <a href="{% url 'upload_view' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Upload</a>
+                         <a href="{% url 'evaluate' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Evaluate</a>
+                        <a href="{% url 'logout_view' %}" class="nav-link px-3 py-2 rounded-lg text-white font-semibold hover:scale-105 transition-transform">Logout</a>
+
+                    </div>
+                    <button id="themeToggle" class="ml-4">
+                        <svg id="sunIcon" class="hidden w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg id="moonIcon" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <button id="hamburger" class="ml-4 md:hidden">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M3 6h18M3 18h18"></path>
+                        </svg>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="parallax">
+            <div class="section-svg dark-only">
+                <svg viewBox="0 0 200 200">
+                    <g id="p">
+                        <path class="wrapper" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"></path>
+                        <use href="#p" transform="rotate(60 100 100)"></use>
+                        <use href="#p" transform="rotate(120 100 100)"></use>
+                    </g>
+                </svg>
+            </div>
+            <div class="hero-wave">
+                <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                    <path d="M-8.31,77.24 C207.87,191.10 344.21,-55.01 508.31,77.24 L500.00,150.00 L0.00,150.00 Z"></path>
+                </svg>
+            </div>
+            
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="hero-title">About Evalora</h2>
+                <p class="hero-tagline max-w-2xl mx-auto">
+                    Evalora is an innovative platform designed to simplify the evaluation of student answer sheets. Using state-of-the-art Optical Character Recognition (OCR), Evalora extracts text from handwritten or typed answer sheets, allowing teachers to evaluate answers efficiently and generate organized mark lists in Word or PDF formats.
+                </p>
+            </div>
+        </section>
+
+        <!-- Benefits for Teachers -->
+        <section class="py-16 section-animate">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">How Evalora Helps Teachers</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="card">
+                        <h3 class="card-title">Save Time</h3>
+                        <p class="card-text">Automate text extraction from answer sheets, reducing manual transcription and speeding up the grading process.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Improve Accuracy</h3>
+                        <p class="card-text">Leverage advanced OCR to accurately interpret even poor handwriting, minimizing errors in text recognition.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Streamline Grading</h3>
+                        <p class="card-text">Assign marks for specific questions, add comments, and generate downloadable mark lists in CSV or PDF formats.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits for Students -->
+        <section class="py-16 section-animate">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">How Evalora Benefits Students</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="card-title">Clear Feedback</h3>
+                        <p class="card-text">Receive detailed marks and comments for each answer, helping you understand your performance and improve.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Organized Results</h3>
+                        <p class="card-text">Access evaluation results in structured formats (Word, PDF), making it easy to review and track progress.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-4 section-animate">
+            <div class="container mx-auto px-4 text-center">
+                <p class="footer-text">© 2025 Evalora. All rights reserved.</p>
+            </div>
+        </footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Example POST request
+    fetch('/index', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ key: 'Some value to save' })  // replace with your data
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
+});
+</script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Theme toggle functionality
+                const htmlElement = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                const savedTheme = localStorage.getItem('theme') || (htmlElement.classList.contains('dark') ? 'dark' : 'light');
+                htmlElement.classList.toggle('dark', savedTheme === 'dark');
+                document.getElementById('sunIcon').classList.toggle('hidden', savedTheme === 'dark');
+                document.getElementById('moonIcon').classList.toggle('hidden', savedTheme !== 'dark');
+
+                themeToggle.addEventListener('click', () => {
+                    htmlElement.classList.toggle('dark');
+                    const isDark = htmlElement.classList.contains('dark');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                    document.getElementById('sunIcon').classList.toggle('hidden', isDark);
+                    document.getElementById('moonIcon').classList.toggle('hidden', !isDark);
+
+                    fetch('/toggle-theme/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                        },
+                        body: JSON.stringify({ theme: isDark ? 'dark' : 'light' })
+                    });
+                });
+
+                // Hamburger menu toggle
+                const hamburger = document.getElementById('hamburger');
+                const navLinks = document.querySelector('.nav-links');
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+
+                // Smooth scrolling and active state for nav links
+                document.querySelectorAll('.nav-link').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        const href = anchor.getAttribute('href');
+                        if (href.startsWith('#')) {
+                            e.preventDefault();
+                            const target = document.querySelector(href);
+                            if (target) {
+                                window.scrollTo({
+                                    top: target.offsetTop - 60,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        anchor.classList.add('active');
+                        if (window.innerWidth <= 768) {
+                            hamburger.classList.remove('active');
+                            navLinks.classList.remove('active');
+                        }
+                    });
+                });
+
+                // Magnetic hover effect for nav links
+                const navLinksItems = document.querySelectorAll('.nav-link');
+                navLinksItems.forEach(link => {
+                    link.addEventListener('mousemove', (e) => {
+                        const rect = link.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        const maxDistance = 20;
+                        const xMove = Math.min(maxDistance, Math.max(-maxDistance, x / 5));
+                        const yMove = Math.min(maxDistance, Math.max(-maxDistance, y / 5));
+                        link.style.transform = `rotateY(${xMove}deg) rotateX(${-yMove}deg) scale(1.05)`;
+                    });
+                    link.addEventListener('mouseleave', () => {
+                        link.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+                    });
+                });
+
+                // Scroll-aware header
+                window.addEventListener('scroll', () => {
+                    const header = document.querySelector('header');
+                    if (window.scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+
+                // IntersectionObserver for section animations
+                const sections = document.querySelectorAll('.section-animate');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+
+                sections.forEach(section => observer.observe(section));
+
+                // Button and nav link ripple effect
+                document.querySelectorAll('.nav-link').forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        const ripple = document.createElement('span');
+                        ripple.classList.add('ripple');
+                        element.appendChild(ripple);
+                        const diameter = Math.max(element.clientWidth, element.clientHeight);
+                        ripple.style.width = ripple.style.height = `${diameter}px`;
+                        const rect = element.getBoundingClientRect();
+                        ripple.style.left = `${e.clientX - rect.left - diameter / 2}px`;
+                        ripple.style.top = `${e.clientY - rect.top - diameter / 2}px`;
+                        setTimeout(() => ripple.remove(), 600);
+                    });
+                });
+
+                // Enhanced parallax effect
+                window.addEventListener('scroll', () => {
+                    const parallax = document.querySelector('.parallax');
+                    if (parallax) {
+                        const scrollPosition = window.scrollY;
+                        parallax.style.backgroundPositionY = `${scrollPosition * 0.4}px`;
+                    }
+                });
+
+                // SVG animation
+                const hexPaths = document.querySelectorAll('.section-svg path');
+                hexPaths.forEach(path => {
+                    path.style.strokeDasharray = '388.5';
+                    path.style.strokeDashoffset = '388.5';
+                    path.animate([
+                        { strokeDashoffset: '388.5' },
+                        { strokeDashoffset: '0' }
+                    ], {
+                        duration: 4000,
+                        iterations: Infinity,
+                        easing: 'linear'
+                    });
+                });
+            });
+        </script>
+    </main>
+</body>
+</html>

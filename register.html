@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evalora - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <style>
+        input, textarea, select, button {
+            position: relative;
+            z-index: 9999 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+    <header class="w-full shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-4 py-3">
+            <h1 class="text-3xl tracking-wide">EVALORA</h1>
+            <nav class="flex items-center gap-4">
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                    <svg id="sunIcon" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 01 8.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg justify-center mx-auto my-10">
+        <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-200 mb-6">Register</h2>
+        
+        <form id="registerForm" action="{% url 'register_view' %}" method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                <input type="text" name="username" id="reg_username" value="{{ form.username.value|default:'' }}" 
+                       class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" required>
+                {% if form.username.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <input type="email" name="email" id="email" value="{{ form.email.value|default:'' }}"
+                       class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" required>
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password1" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                <input type="password" name="password1" id="reg_password1"
+                       class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" required>
+                {% if form.password1.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="password2" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                <input type="password" name="password2" id="reg_password2"
+                       class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" required>
+                {% if form.password2.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="text-sm {{ message.tags }} {% if message.tags == 'error' %}text-red-500{% else %}text-green-500{% endif %} mt-2">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- JavaScript validation errors -->
+            <div id="registerError" class="text-red-500 text-sm hidden"></div>
+                 
+            <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700">Register</button>
+        </form>
+
+        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+            Already have an account? 
+            <a href="{% url 'login_view' %}" class="text-blue-500 hover:underline dark:text-blue-400">Login</a>
+        </p>
+    </div>
+
+<script>
+    // Same JS validation as before (kept for UX)
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+    const htmlElement = document.documentElement;   
+    if (localStorage.getItem('theme') === 'dark') {
+        htmlElement.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+    } else {
+        htmlElement.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+    }
+
+    const registerForm = document.getElementById('registerForm');
+    const registerError = document.getElementById('registerError');
+    const emailInput = document.getElementById('email');
+
+    registerForm.addEventListener('submit', function(event) {
+        const username = document.getElementById('reg_username').value.trim();
+        const email = emailInput.value.trim();
+        const password1 = document.getElementById('reg_password1').value;
+        const password2 = document.getElementById('reg_password2').value;
+
+        registerError.classList.add('hidden');
+        registerError.textContent = '';
+
+        // Username check
+        if (username.length < 6) {
+            event.preventDefault();
+            registerError.textContent = 'Username must be at least 6 characters long.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            event.preventDefault();
+            registerError.textContent = 'Username can only contain letters, numbers, and underscores.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+
+        // Email check with whitelist
+        const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "icloud.com"];
+        const emailDomain = email.split('@')[1];
+        if (!emailDomain || !allowedDomains.includes(emailDomain.toLowerCase())) {
+            event.preventDefault();
+            registerError.textContent = 'Please enter a valid email (gmail, yahoo, outlook, hotmail, icloud).';
+            registerError.classList.remove('hidden');
+            return;
+        }
+
+        // Password checks
+        if (password1.length < 8) {
+            event.preventDefault();
+            registerError.textContent = 'Password must be at least 8 characters long.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+        if (!/[A-Z]/.test(password1)) {
+            event.preventDefault();
+            registerError.textContent = 'Password must contain at least one uppercase letter.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+        if (!/[a-z]/.test(password1)) {
+            event.preventDefault();
+            registerError.textContent = 'Password must contain at least one lowercase letter.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+        if (!/[0-9]/.test(password1)) {
+            event.preventDefault();
+            registerError.textContent = 'Password must contain at least one digit.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+        if (!/[@$!%*?&]/.test(password1)) {
+            event.preventDefault();
+            registerError.textContent = 'Password must contain at least one special character (@$!%*?&).';
+            registerError.classList.remove('hidden');
+            return;
+        }
+
+        // Confirm password
+        if (password1 !== password2) {
+            event.preventDefault();
+            registerError.textContent = 'Passwords do not match.';
+            registerError.classList.remove('hidden');
+            return;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1356 @@
+/* Add this near the top of your CSS, after any body/html declarations */
+/* Add this right after your body styles */
+html, body {
+  min-height: 100%;         /* allow content to expand */
+  height: auto;             /* prevent locking at 100vh */
+  overflow-y: auto;         /* always allow vertical scroll */
+  scroll-behavior: smooth;  /* smooth scrolling */
+}
+
+/* ------------------- GLOBAL RESET ------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ------------------- ROOT VARIABLES ------------------- */
+:root {
+  --primary-color: #4f46e5;
+  --secondary-color: #6366f1;
+  --accent-color: #ec4899;
+  --bg-color: #f9fafb;
+  --text-color: #1f2937;
+  --border-color: #d1d5db;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: #e0e7ff;
+  --input-bg: #4cc9bf;
+  --button-text: #ffffff;
+  --link-color: #3b82f6;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --warning-color: #fbbf24;
+  --info-color: #3b82f6;
+  --paper-accent: #fef08a;
+  --grade-stamp: #b91c1c;
+  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  --gradient-accent: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --gradient-error: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  --gradient-paper: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+  --animation-duration: 0.35s;
+  --animation-timing: ease-in-out;
+  --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+--shadow-hover: rgba(0, 0, 0, 0.15);
+--shadow-light: rgba(0, 0, 0, 0.05);
+--error-red: #ef4444; /* You used this in #totalMarksCell.exceed */
+
+}
+
+/* ------------------- DARK MODE VARIABLES ------------------- */
+.dark {
+  --primary-color: #a855f7;
+  --secondary-color: #8b5cf6;
+  --accent-color: #06b6d4;
+  --bg-color: #111827;
+  --text-color: #d1d5db;
+  --border-color: #374151;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --hover-bg: #1f2937;
+  --input-bg: #1f2937;
+  --button-text: #000000;
+  --link-color: #60a5fa;
+  --error-color: #f56565;
+  --success-color: #22d3ee;
+  --warning-color: #fbbf24;
+  --info-color: #3b82f6;
+  --paper-accent: #22d3ee;
+  --grade-stamp: #22d3ee;
+  --gradient-primary: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+  --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+  --gradient-success: linear-gradient(135deg, #22d3ee 0%, #67e8f9 100%);
+  --gradient-error: linear-gradient(135deg, #f56565 0%, #fca5a5 100%);
+  --gradient-paper: linear-gradient(135deg, #22d3ee 0%, #67e8f9 100%);
+  --animation-duration: 0.35s;
+  --animation-timing: ease-in-out;
+}
+
+/* ------------------- BODY STYLES ------------------- */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1600&q=80"); /* Exam desk */
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: overlay;
+  color: #1e293b;
+  min-height: 100vh;
+  position: relative;
+  overflow: auto;
+  transition: all var(--animation-duration) var(--animation-timing);
+}
+
+/* Insane Background Effect - Floating Papers */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-image: radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+  opacity: 0.5;
+  overflow-y: auto; /* Explicitly allow vertical scrolling */
+  animation: bg-pulse 5s infinite alternate var(--animation-timing);
+  z-index: -2;
+}
+
+@keyframes bg-pulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0.5; transform: scale(1.05); }
+}
+
+/* Dark Mode Background */
+.dark body {  
+    background: linear-gradient(to right, #0f172a, #1e293b);
+  background-image: url("https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80"); /* Dark exam vibes */
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: multiply;
+  color: #e2e8f0;
+}
+
+/* Smooth Transitions for All Elements */
+* {
+  transition: all var(--animation-duration) var(--animation-timing);
+}
+
+/* ------------------- HEADER STYLES ------------------- */
+header {
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInDown 1s var(--animation-timing);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header h1 {
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #60a5fa, #34d399, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glowText 3s infinite alternate var(--animation-timing);
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+@keyframes glowText {
+  0% { text-shadow: 0 0 5px #60a5fa, 0 0 10px #34d399; }
+  50% { text-shadow: 0 0 15px #fbbf24, 0 0 20px #f43f5e; }
+  100% { text-shadow: 0 0 5px #60a5fa, 0 0 10px #34d399; }
+}
+
+/* Dark Mode Header */
+.dark header {
+  background: rgba(17, 24, 39, 0.8);
+}
+
+.dark header h1 {
+  background: linear-gradient(90deg, #34d399, #60a5fa, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glowText-dark 3s infinite alternate var(--animation-timing);
+}
+
+@keyframes glowText-dark {
+  0% { text-shadow: 0 0 5px #34d399, 0 0 10px #60a5fa; }
+  50% { text-shadow: 0 0 15px #fbbf24, 0 0 20px #f43f5e; }
+  100% { text-shadow: 0 0 5px #34d399, 0 0 10px #60a5fa; }
+}
+
+/* ------------------- NAVIGATION STYLES ------------------- */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  position: relative;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform var(--animation-duration) var(--animation-timing), background-color var(--animation-duration) var(--animation-timing);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 50%;
+  bottom: -4px;
+  background: #3b82f6;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
+  transform: translateX(0);
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.08);
+}
+
+/* Dark Mode Nav Links */
+.dark .nav-link::after {
+  background: #34d399;
+}
+
+/* Hamburger Button */
+#hamburger {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.5rem;
+  transition: transform var(--animation-duration) var(--animation-timing);
+}
+
+#hamburger:hover {
+  transform: rotate(90deg);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Theme Toggle */
+#themeToggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--animation-duration) var(--animation-timing);
+}
+
+#themeToggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  transform: scale(1.1);
+}
+
+#themeSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+svg {
+  transition: transform 0.3s ease;
+}
+
+#themeToggle:hover svg {
+  transform: scale(1.2);
+}
+
+/* ------------------- MAIN CONTENT STYLES ------------------- */
+main {
+  padding-top: 5rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Insane Floating Grade Stamps */
+main::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 100px;
+  height: 100px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23ec4899" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%23ec4899">A+</text></svg>') no-repeat center/contain;
+  opacity: 0.15;
+  animation: float-stamp 6s infinite var(--animation-timing);
+  z-index: -1;
+}
+
+@keyframes float-stamp {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(20px, -30px) rotate(15deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+main::after {
+  content: '';
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width: 100px;
+  height: 100px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%2310b981" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%2310b981">100%</text></svg>') no-repeat center/contain;
+  opacity: 0.15;
+  animation: float-stamp-reverse 7s infinite var(--animation-timing);
+  z-index: -1;
+}
+
+@keyframes float-stamp-reverse {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-20px, 30px) rotate(-15deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Dark Mode Floating Stamps */
+.dark main::before {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%2306b6d4" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%2306b6d4">A+</text></svg>') no-repeat center/contain;
+  opacity: 0.25;
+}
+
+.dark main::after {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%2322d3ee" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%2322d3ee">100%</text></svg>') no-repeat center/contain;
+  opacity: 0.25;
+}
+
+/* Form Container */
+.w-full.max-w-4xl {
+    background: rgba(0, 0, 0);
+  backdrop-filter: blur(15px);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 15px 35px var(--shadow-color);
+  position: relative;
+  overflow: visible;
+  animation: form-load 0.8s var(--animation-timing);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes form-load {
+  0% { opacity: 0; transform: translateY(50px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dark .w-full.max-w-4xl {
+  background: rgba(17, 24, 39, 0.9);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* Insane Neon Border for Form */
+.w-full.max-w-4xl::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-primary);
+  z-index: -1;
+  filter: blur(20px);
+  opacity: 0.3;
+  animation: neon-border 4s infinite alternate var(--animation-timing);
+}
+
+@keyframes neon-border {
+  0% { opacity: 0.3; filter: blur(20px); }
+  100% { opacity: 0.5; filter: blur(30px); }
+}
+
+.dark .w-full.max-w-4xl::before {
+  background: var(--gradient-accent);
+  opacity: 0.4;
+}
+
+/* Title Styles */
+h2.animate-text-glow {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+  animation: text-glow 2s ease-in-out infinite alternate, color-shift 5s infinite linear;
+}
+
+@keyframes color-shift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.dark h2.animate-text-glow {
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+}
+
+/* Form Sections */
+.space-y-6 {
+  position: relative;
+}
+
+/* Answer Sheet Selection */
+.space-y-4 {
+  margin-bottom: 2rem;
+}
+
+.flex.items-center.gap-4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#answerSheetDropdown {
+  flex: 1;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  transition: all var(--animation-duration) var(--animation-timing);
+  animation: select-glow 2s infinite alternate var(--animation-timing);
+}
+
+@keyframes select-glow {
+  0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+  100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+}
+
+#answerSheetDropdown:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.dark #answerSheetDropdown {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* View and OCR Buttons */
+#viewAnswerSheetBtn, #ocrBtn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.5rem;
+  transition: all var(--animation-duration) var(--animation-timing);
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+#viewAnswerSheetBtn {
+  background: var(--gradient-success);
+  animation: btn-pulse 2s infinite alternate var(--animation-timing);
+}
+
+#viewAnswerSheetBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+#ocrBtn {
+  background: var(--gradient-primary);
+  animation: btn-glow 3s infinite alternate var(--animation-timing);
+}
+
+#ocrBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+@keyframes btn-pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes btn-glow {
+  0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+  100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+}
+
+/* Dark Mode Buttons */
+.dark #viewAnswerSheetBtn {
+  background: var(--gradient-success);
+}
+
+.dark #ocrBtn {
+  background: var(--gradient-accent);
+}
+
+/* Insane Button Shine Effect */
+#viewAnswerSheetBtn::after, #ocrBtn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+#viewAnswerSheetBtn:hover::after, #ocrBtn:hover::after {
+  left: 100%;
+}
+
+/* ------------------- TABLE STYLES ------------------- */
+/* Add this wherever you define your table/container styles */
+.scrollable-table {
+    max-height: 500px; /* adjust height as needed */
+    overflow-y: auto;  /* enables vertical scroll */
+    display: block;    /* makes scroll work properly */
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  transition: box-shadow 0.3s ease;
+}
+
+.overflow-x-auto:hover {
+  box-shadow: 0 8px 24px var(--shadow-hover);
+}
+
+.dark .overflow-x-auto {
+  background: rgba(17, 24, 39, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  animation: table-fade 1s ease;
+}
+
+@keyframes table-fade {
+  0% { opacity: 0; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+thead tr {
+  background: var(--gradient-blue);
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  animation: thead-glow 2s infinite alternate var(--animation-timing);
+}
+
+@keyframes thead-glow {
+  0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+  100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+}
+
+thead th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-weight: 700;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+tbody tr:hover {
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.dark tbody tr:hover {
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+}
+
+tbody td {
+  padding: 1rem 1.5rem;
+}
+
+tfoot tr {
+  background: var(--gradient-success);
+  color: #ffffff;
+  font-weight: 700;
+  animation: tfoot-pulse 2s infinite alternate var(--animation-timing);
+}
+
+@keyframes tfoot-pulse {
+  0% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+tfoot td {
+  padding: 1rem 1.5rem;
+}
+
+#totalMarksCell {
+  font-size: 1.125rem;
+  animation: total-glow 2s infinite alternate var(--animation-timing);
+}
+
+@keyframes total-glow {
+  0% { text-shadow: 0 0 5px rgba(16, 185, 129, 0.3); }
+  100% { text-shadow: 0 0 15px rgba(16, 185, 129, 0.6); }
+}
+
+#totalMarksCell.exceed {
+  color: var(--error-red);
+  animation: exceed-shake 0.5s infinite var(--animation-timing);
+}
+
+@keyframes exceed-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ------------------- INPUT STYLES ------------------- */
+input[type="number"], textarea {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px var(--shadow-light);
+}
+
+input[type="number"]:focus, textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  transform: scale(1.02);
+}
+
+.dark input[type="number"], .dark textarea {
+  border-color: var(--border-color);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.dark input[type="number"]:focus, .dark textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+}
+
+/* Insane Input Glow Effect */
+input[type="number"]:hover, textarea:hover {
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.1);
+}
+
+input[type="number"]:focus {
+  animation: input-glow 1.5s infinite alternate var(--animation-timing);
+}
+
+@keyframes input-glow {
+  0% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.2); }
+  100% { box-shadow: 0 0 15px rgba(79, 70, 229, 0.4); }
+}
+
+.dark input[type="number"]:focus {
+  animation: input-glow-dark 1.5s infinite alternate var(--animation-timing);
+}
+
+@keyframes input-glow-dark {
+  0% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.2); }
+  100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+}
+
+/* ------------------- CHECKBOX STYLES ------------------- */
+.q10-checkbox {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.q10-checkbox:checked {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  animation: checkbox-pop 0.3s var(--animation-timing);
+}
+
+.q10-checkbox:checked::before {
+  content: '\2714';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 1rem;
+  animation: check-mark 0.3s var(--animation-timing);
+}
+
+@keyframes checkbox-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes check-mark {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.dark .q10-checkbox:checked {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* ------------------- SUBMIT BUTTON STYLES ------------------- */
+#submitButton {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
+}
+
+#submitButton:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.5);
+  animation: button-insane 0.5s infinite alternate var(--animation-timing);
+}
+
+@keyframes button-insane {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(15deg); }
+}
+
+#submitButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+
+#submitButton:hover::before {
+  left: 100%;
+}
+
+.dark #submitButton {
+  background: var(--gradient-accent);
+  box-shadow: 0 6px 15px rgba(6, 182, 212, 0.3);
+}
+
+.dark #submitButton:hover {
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5);
+}
+
+/* ------------------- ERROR MESSAGES ------------------- */
+.text-red-500 {
+  color: var(--error-color);
+  animation: shake 0.4s var(--animation-timing), glowError 1s infinite alternate var(--animation-timing);
+}
+
+@keyframes glowError {
+  0% { text-shadow: 0 0 5px var(--error-color); }
+  100% { text-shadow: 0 0 15px var(--error-color); }
+}
+
+/* ------------------- PREVIEW TABLE ------------------- */
+#previewTable {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  animation: fadeIn 1.2s var(--animation-timing);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+#previewTable thead tr {
+  background: var(--gradient-primary);
+  color: #ffffff;
+}
+
+#previewTable tbody tr:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.01);
+  transition: 0.3s var(--animation-timing);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+#previewTable tfoot tr {
+  background: var(--gradient-success);
+  color: #ffffff;
+}
+
+#previewTable tfoot td {
+  font-weight: 700;
+}
+
+.dark #previewTable {
+  border: 1px solid var(--border-color);
+}
+
+.dark #previewTable thead tr {
+  background: var(--gradient-accent);
+}
+
+/* ------------------- INSANE ANIMATIONS ------------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 5px #60a5fa, 0 0 10px #34d399; }
+  to { text-shadow: 0 0 15px #fbbf24, 0 0 20px #f43f5e; }
+}
+
+@keyframes btnGlow {
+  from { box-shadow: 0 0 12px #2563eb, 0 0 24px #34d399; }
+  to { box-shadow: 0 0 18px #fbbf24, 0 0 36px #f43f5e; }
+}
+
+@keyframes btnPulse {
+  0% { transform: scale(1.05); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0px); }
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatPaper {
+  0% { transform: translateY(0) rotate(0deg); left: 10%; }
+  50% { transform: translateY(600px) rotate(180deg); left: 40%; }
+  100% { transform: translateY(0) rotate(360deg); left: 70%; }
+}
+
+/* ------------------- EXTENDED INSANE EFFECTS ------------------- */
+body {
+  animation: bgShift 20s infinite linear;
+}
+
+header {
+  animation: header-insane 5s infinite alternate var(--animation-timing);
+}
+
+@keyframes header-insane {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.2); }
+}
+
+main > div {
+  animation: floatUp 1.5s var(--animation-timing), insane-card 4s infinite alternate var(--animation-timing);
+}
+
+@keyframes insane-card {
+  0% { box-shadow: 0 10px 25px var(--shadow-color); opacity: 0.9; }
+  100% { box-shadow: 0 15px 35px rgba(79, 70, 229, 0.3); opacity: 1; }
+}
+
+table {
+  animation: table-insane 3s infinite alternate var(--animation-timing);
+}
+
+@keyframes table-insane {
+  0% { transform: perspective(1000px) rotateX(0deg); }
+  100% { transform: perspective(1000px) rotateX(2deg); }
+}
+
+input, textarea {
+  animation: input-insane 2s infinite alternate var(--animation-timing);
+}
+
+@keyframes input-insane {
+  0% { box-shadow: inset 0 0 5px rgba(59, 130, 246, 0.1); }
+  100% { box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2); }
+}
+
+#submitButton {
+  animation: btnGlow 2s infinite alternate var(--animation-timing), btnPulse 1s infinite var(--animation-timing);
+}
+
+/* ------------------- PARTICLE EFFECTS ------------------- */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: particle-float 10s infinite linear;
+}
+
+.particle:nth-child(1) { left: 10%; animation-duration: 12s; }
+.particle:nth-child(2) { left: 30%; animation-duration: 15s; }
+.particle:nth-child(3) { left: 50%; animation-duration: 10s; }
+.particle:nth-child(4) { left: 70%; animation-duration: 18s; }
+.particle:nth-child(5) { left: 90%; animation-duration: 14s; }
+
+@keyframes particle-float {
+  0% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-100vh) scale(1.5); opacity: 0.5; }
+  100% { transform: translateY(-200vh) scale(1); opacity: 0.3; }
+}
+
+.dark .particle {
+  background: var(--success-color);
+}
+
+/* ------------------- STAMP ANIMATION ------------------- */
+.stamp {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  width: 100px;
+  height: 100px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23ec4899" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%23ec4899">Graded</text></svg>') no-repeat center/contain;
+  opacity: 0.2;
+  animation: stamp-rotate 8s infinite linear;
+  z-index: -1;
+}
+
+@keyframes stamp-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.dark .stamp {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%2306b6d4" stroke-width="5"/><text x="50" y="55" font-size="30" text-anchor="middle" fill="%2306b6d4">Graded</text></svg>') no-repeat center/contain;
+}
+
+/* ------------------- PENCIL CURSOR FOR INPUTS ------------------- */
+input[type="number"], textarea {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="%234f46e5"/></svg>') 0 24, pointer;
+}
+
+.dark input[type="number"], .dark textarea {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="%23a855f7"/></svg>') 0 24, pointer;
+}
+
+/* ------------------- GRADE CONFETTI ON SUBMIT ------------------- */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  animation: confetti-fall 2s linear infinite;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.confetti:nth-child(odd) {
+  background: var(--success-color);
+  animation-duration: 1.5s;
+}
+
+.confetti:nth-child(even) {
+  background: var(--warning-color);
+  animation-duration: 2.5s;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ------------------- INSANE EVALUATION PARTICLES ------------------- */
+.evaluation-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: particle-insane 5s infinite var(--animation-timing);
+}
+
+.particle:nth-child(1) { left: 15%; animation-duration: 6s; }
+.particle:nth-child(2) { left: 35%; animation-duration: 5s; }
+.particle:nth-child(3) { left: 55%; animation-duration: 7s; }
+.particle:nth-child(4) { left: 75%; animation-duration: 4s; }
+.particle:nth-child(5) { left: 95%; animation-duration: 8s; }
+
+@keyframes particle-insane {
+  0% { transform: translateY(0) scale(1); opacity: 0.4; }
+  50% { transform: translateY(-50vh) scale(1.5); opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(1); opacity: 0.4; }
+}
+
+.dark .particle {
+  background: var(--accent-color);
+}
+
+/* ------------------- INSANE TABLE GLOW ------------------- */
+table {
+  position: relative;
+  overflow: hidden;
+  animation: table-glow 4s infinite alternate var(--animation-timing);
+}
+
+.scrollable-table {
+  max-height: 500px;
+  overflow-y: auto;
+  display: block;
+}
+@keyframes table-glow {
+  0% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+  100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5); }
+}
+
+.dark table {
+  animation: table-glow-dark 4s infinite alternate var(--animation-timing);
+}
+
+@keyframes table-glow-dark {
+  0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
+  100% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.5); }
+}
+
+/* ------------------- INSANE BUTTON EXPLOSION ------------------- */
+#submitButton:hover {
+  animation: button-explosion 0.5s var(--animation-timing);
+}
+
+@keyframes button-explosion {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(59, 130, 246, 0); }
+  50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+/* ------------------- INSANE PREVIEW ANIMATION ------------------- */
+#previewBody tr {
+  animation: preview-row-insane 0.5s var(--animation-timing);
+}
+
+@keyframes preview-row-insane {
+  0% { opacity: 0; transform: translateX(-50px) rotate(-5deg); }
+  100% { opacity: 1; transform: translateX(0) rotate(0deg); }
+}
+
+/* ------------------- INSANE ERROR VIBRATE ------------------- */
+#error, .error-highlight, #preview-error, #marks-error {
+  animation: insane-vibrate 0.1s infinite linear;
+}
+
+@keyframes insane-vibrate {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ------------------- INSANE PARTICLE EXPLOSION ON SUBMIT ------------------- */
+#submitButton:active {
+  animation: particle-explosion 0.5s var(--animation-timing);
+}
+
+@keyframes particle-explosion {
+  0% { box-shadow: 0 0 0 rgba(236, 72, 153, 0); }
+  100% { box-shadow: 0 0 50px rgba(236, 72, 153, 0.8); }
+}
+
+/* ------------------- INSANE 3D TABLE PERSPECTIVE ------------------- */
+.overflow-x-auto {
+  perspective: 1000px;
+}
+
+table {
+  transform-style: preserve-3d;
+  animation: table-3d 5s infinite alternate var(--animation-timing);
+}
+
+@keyframes table-3d {
+  0% { transform: rotateX(0deg) rotateY(0deg); }
+  100% { transform: rotateX(5deg) rotateY(5deg); }
+}
+
+/* ------------------- INSANE COLOR SHIFT ON HOVER ------------------- */
+.nav-link:hover, #submitButton:hover, input:hover, textarea:hover {
+  animation: color-shift-insane 1s infinite linear;
+}
+
+@keyframes color-shift-insane {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* ------------------- INSANE GLOW ON FOCUS ------------------- */
+input:focus, textarea:focus {
+  animation: insane-glow 1s infinite alternate var(--animation-timing);
+}
+
+@keyframes insane-glow {
+  0% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+  100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+}
+
+.dark input:focus, .dark textarea:focus {
+  animation: insane-glow-dark 1s infinite alternate var(--animation-timing);
+}
+
+@keyframes insane-glow-dark {
+  0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
+  100% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.8); }
+}
+
+/* ------------------- INSANE PARTICLE BACKGROUND ------------------- */
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+  opacity: 0.3;
+  animation: insane-pulse 3s infinite alternate var(--animation-timing);
+  z-index: -2;
+}
+
+@keyframes insane-pulse {
+  0% { transform: scale(1); opacity: 0.3; filter: blur(5px); }
+  100% { transform: scale(1.1); opacity: 0.5; filter: blur(0); }
+}
+
+.dark body::after {
+  background: radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.2) 0%, transparent 70%);
+}
+
+/* ------------------- INSANE LOGO SPIN ON HOVER ------------------- */
+h1:hover {
+  animation: logo-spin 1s linear infinite;
+}
+
+@keyframes logo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ------------------- INSANE TABLE ROW EXPANSION ------------------- */
+tbody tr:hover {
+  animation: row-expand 0.5s var(--animation-timing);
+}
+
+@keyframes row-expand {
+  0% { height: auto; }
+  100% { height: 1.2 * auto; }
+}
+
+/* ------------------- INSANE SHIMMER EFFECT FOR TABLES ------------------- */
+table::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite linear;
+  z-index: -1;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ------------------- INSANE CONFETTI ON SUBMIT ------------------- */
+#submitButton:active ~ .confetti-container {
+  display: block;
+  animation: confetti-explosion 1s var(--animation-timing);
+}
+
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: confetti-fall 2s linear;
+  opacity: 0.8;
+}
+
+.confetti:nth-child(odd) {
+  background: var(--accent-color);
+  animation-duration: 1.5s;
+}
+
+.confetti:nth-child(even) {
+  background: var(--success-color);
+  animation-duration: 2.5s;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ------------------- INSANE 3D FLIP FOR CHECKBOX ------------------- */
+.q10-checkbox:checked {
+  animation: checkbox-flip 0.5s var(--animation-timing);
+}
+
+@keyframes checkbox-flip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
+/* ------------------- INSANE RAINBOW BORDER FOR FORM ------------------- */
+.w-full.max-w-4xl {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.w-full.max-w-4xl::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ec4899, #fbbf24, #10b981, #3b82f6);
+  background-size: 400% 400%;
+  animation: rainbow-border 10s linear infinite;
+  z-index: -1;
+  border-radius: 1rem;
+  filter: blur(5px);
+  opacity: 0.5;
+}
+
+@keyframes rainbow-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ------------------- INSANE PARTICLE BURST ON INPUT FOCUS ------------------- */
+input:focus ~ .particle-burst, textarea:focus ~ .particle-burst {
+  display: block;
+  animation: particle-burst 0.5s var(--animation-timing);
+}
+
+.particle-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: none;
+  pointer-events: none;
+}
+
+.particle-burst .particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  animation: burst-out 0.5s var(--animation-timing);
+  opacity: 0.8;
+}
+
+.particle-burst .particle:nth-child(1) { animation-delay: 0s; }
+.particle-burst .particle:nth-child(2) { animation-delay: 0.1s; }
+.particle-burst .particle:nth-child(3) { animation-delay: 0.2s; }
+.particle-burst .particle:nth-child(4) { animation-delay: 0.3s; }
+.particle-burst .particle:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes burst-out {
+  0% { transform: translate(0, 0) scale(0); opacity: 1; }
+  100% { transform: translate(var(--burst-x), var(--burst-y)) scale(1); opacity: 0; }
+}
+
